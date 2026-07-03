@@ -1,0 +1,8 @@
+{
+  "id": "sample_prison_island",
+  "name": "監獄島",
+  "character": { "file": "character.json" },
+  "item": { "file": "item.json" },
+  "room": { "file": "room.json" },
+  "rule": { "file": "rule.json" }
+}
