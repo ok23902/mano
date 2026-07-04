@@ -6,10 +6,10 @@ namespace mano.Runtime
     public class Runtime
     {
         private Resource _resource;
-        private WorldObject _worldObject;
         private TraitRegistry _registry;
+        public WorldObject WorldObject { get; private set; }
 
-        public void Start()
+        public void Init()
         {
             _resource = new Resource();
             _registry = new TraitRegistry();
@@ -17,28 +17,28 @@ namespace mano.Runtime
             // TODO: ここで必要なTraitを手動でレジストリに登録する
             // _registry.Register(new MoveTrait()); 
 
-            _worldObject = new WorldObject();
+            WorldObject = new WorldObject();
             
             // ローダーの生成
             ResourceStaticLoader loader = new ResourceStaticLoader(_registry);
 
             // 各JSONから生成したObjectを、直接対応するStatic内の辞書に詰める
-            LoadAndStore(loader, "Resource/Static/character.json", _worldObject.Static.Character);
-            LoadAndStore(loader, "Resource/Static/item.json", _worldObject.Static.Item);
-            LoadAndStore(loader, "Resource/Static/room.json", _worldObject.Static.Room);
-            LoadAndStore(loader, "Resource/Static/rule.json", _worldObject.Static.Rule);
+            LoadAndStore(loader, "Resource/Static/character.json", WorldObject.Static.Character);
+            LoadAndStore(loader, "Resource/Static/item.json", WorldObject.Static.Item);
+            LoadAndStore(loader, "Resource/Static/room.json", WorldObject.Static.Room);
+            LoadAndStore(loader, "Resource/Static/rule.json", WorldObject.Static.Rule);
 
             // StaticからDynamicへ実体化する
-            _worldObject.Init();
+            WorldObject.Init();
         }
 
         public void Update()
         {
             // Dynamicリソースを渡して更新
-            _worldObject.Update(_resource.Dynamic);
+            WorldObject.Update(_resource.Dynamic);
         }
 
-        public void OnDestroy()
+        public void Dispose()
         {
             // 必要な終了処理
         }
