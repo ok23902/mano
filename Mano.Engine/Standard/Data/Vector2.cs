@@ -1,13 +1,14 @@
-namespace Mano;
-
-public struct Vector2
+namespace mano.Engine
 {
-    public float X;
-    public float Y;
-
-    public Vector2(float x, float y)
+    public struct Vector2
     {
-        X = x;
-        Y = y;
+        public float X;
+        public float Y;
+
+        public Vector2(float x, float y)
+        {
+            X = x;
+            Y = y;
+        }
     }
 }

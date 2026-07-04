@@ -1,9 +1,12 @@
+using System.Collections.Generic;
+using System.Linq;
+
 namespace mano.Engine
 {
     // Traitを継承（他のTraitと同じ扱い）
     public class WorldTrait : Trait
     {
-        public override void OnInit(Object targetObject, WorldObject worldObject)
+        public override void ExecuteInit(Object targetObject, WorldObject worldObject)
         {
             // 1. まずDynamicの中身をリセット
             worldObject.Dynamic.Clear();
@@ -21,16 +24,16 @@ namespace mano.Engine
             foreach (var obj in worldObject.Dynamic.Rule.Values) obj.Init(worldObject);
         }
 
-        public override void OnUpdate(Object targetObject, WorldObject worldObject, Resource.Dynamic dynamicData)
+        public override void ExecuteUpdate(Object targetObject, WorldObject worldObject)
         {
             // Dynamicにいる実体すべてのUpdateを回す
-            foreach (var obj in worldObject.Dynamic.Character.Values) obj.Update(worldObject, dynamicData);
-            foreach (var obj in worldObject.Dynamic.Item.Values) obj.Update(worldObject, dynamicData);
-            foreach (var obj in worldObject.Dynamic.Room.Values) obj.Update(worldObject, dynamicData);
-            foreach (var obj in worldObject.Dynamic.Rule.Values) obj.Update(worldObject, dynamicData);
+            foreach (var obj in worldObject.Dynamic.Character.Values) obj.Update(worldObject);
+            foreach (var obj in worldObject.Dynamic.Item.Values) obj.Update(worldObject);
+            foreach (var obj in worldObject.Dynamic.Room.Values) obj.Update(worldObject);
+            foreach (var obj in worldObject.Dynamic.Rule.Values) obj.Update(worldObject);
         }
 
-        public override void OnDispose(Object targetObject, WorldObject worldObject)
+        public override void ExecuteDispose(Object targetObject, WorldObject worldObject)
         {
             // 終了時に、各オブジェクトのDisposeを呼んであげる
             foreach (var obj in worldObject.Dynamic.Character.Values) obj.Dispose(worldObject);

@@ -1,4 +1,7 @@
-public class Rule
+namespace mano.Engine
 {
-    public object? Value;
+    public class Rule
+    {
+        public object? Value;
+    }
 }

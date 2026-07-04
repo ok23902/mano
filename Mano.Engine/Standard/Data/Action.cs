@@ -1,8 +1,8 @@
-namespace Mano;
-
-public class Action
+namespace mano.Engine
 {
-    public string Command = "";
-
-    public List<string> Args = new();
+    public class Action
+    {
+        public string Command = "";
+        public List<string> Args = new();
+    }
 }

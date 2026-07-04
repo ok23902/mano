@@ -1,12 +1,15 @@
-public class CharacterAIObject : CharacterObject
+namespace mano.Engine
 {
-    public string Goal = "";
+    public class CharacterAIObject : CharacterObject
+    {
+        public string Goal = "";
 
-    public List<Information> FocusedInformation = new();
+        public List<Information> FocusedInformation = new();
 
-    public int Sleepness = 0;
-    public int Hungry = 0;
-    public int Thirsty= 0;
-    public int Boredom= 0;
-    public int Bio = 0;
+        public int Sleepness = 0;
+        public int Hungry = 0;
+        public int Thirsty = 0;
+        public int Boredom = 0;
+        public int Bio = 0;
+    }
 }

@@ -1,6 +1,7 @@
-namespace Mano;
-
-public class Utterance : Information
+namespace mano.Engine
 {
-    public string SpeakerId = "";
+    public class Utterance : Information
+    {
+        public string SpeakerId = "";
+    }
 }

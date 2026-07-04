@@ -1,8 +1,8 @@
-namespace Mano;
-
-public class Information
+namespace mano.Engine
 {
-    public string Content = "";
-
-    public DateTime Tick.DateTime;
+    public class Information
+    {
+        public string Content = ""; 
+        public Tick Tick;
+    }
 }

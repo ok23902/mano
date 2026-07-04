@@ -10,15 +10,15 @@ namespace mano.Runtime
     // ファクトリをここに併設（拡張しやすくするため）
     public static class ObjectFactory
     {
-        public static Engine.Object Create(string typeName)
+        public static mano.Engine.Object Create(string typeName)
         {
             return typeName switch
             {
-                "Character" => new Character(),
-                "Item" => new Item(),
-                "Room" => new Room(),
-                "Rule" => new Rule(),
-                _ => new Engine.Object()
+                "Character" => new CharacterObject(),
+                "Item" => new ItemObject(),
+                "Room" => new RoomObject(),
+                "Rule" => new RuleObject(),
+                _ => new mano.Engine.Object()
             };
         }
     }
@@ -33,9 +33,9 @@ namespace mano.Runtime
             _registry = registry;
         }
 
-        public List<Engine.Object> LoadObjects(string relativePath)
+        public List<mano.Engine.Object> LoadObjects(string relativePath)
         {
-            var resultList = new List<Engine.Object>();
+            var resultList = new List<mano.Engine.Object>();
             
             // 実行ファイルの場所を基底パスとして絶対パスを算出
             string fullPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, relativePath);
@@ -51,7 +51,7 @@ namespace mano.Runtime
                 {
                     // 1. Typeを取得してFactoryで生成
                     string typeName = element.GetProperty("Type").GetString();
-                    Engine.Object newObj = ObjectFactory.Create(typeName);
+                    mano.Engine.Object newObj = ObjectFactory.Create(typeName);
 
                     // 2. フィールド/プロパティへの自動代入
                     PopulateObject(newObj, element);
@@ -61,8 +61,9 @@ namespace mano.Runtime
                     {
                         foreach (JsonElement traitNameElement in traitsElement.EnumerateArray())
                         {
+                            string traitId = traitNameElement.GetString();
                             var trait = _registry.GetTrait(traitNameElement.GetString());
-                            if (trait != null) newObj.Traits.Add(trait);
+                            if (trait != null) newObj.Traits.Add(traitId);
                         }
                     }
 
@@ -73,7 +74,7 @@ namespace mano.Runtime
             return resultList;
         }
 
-        public static void PopulateObject(Engine.Object obj, JsonElement json)
+        public static void PopulateObject(mano.Engine.Object obj, JsonElement json)
         {
             var type = obj.GetType();
             

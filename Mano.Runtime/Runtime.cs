@@ -5,19 +5,15 @@ namespace mano.Runtime
 {
     public class Runtime
     {
-        private Resource _resource;
-        private TraitRegistry _registry;
-        public WorldObject WorldObject { get; private set; }
+        private Resource _resource = new Resource();
+        private TraitRegistry _registry = new TraitRegistry();
+        public WorldObject WorldObject { get; private set; } = new WorldObject();
 
         public void Init()
         {
-            _resource = new Resource();
-            _registry = new TraitRegistry();
+            WorldObject.TraitProvider = _registry;
             
-            // TODO: ここで必要なTraitを手動でレジストリに登録する
-            // _registry.Register(new MoveTrait()); 
-
-            WorldObject = new WorldObject();
+            _registry.Register("WorldTrait", new WorldTrait());
             
             // ローダーの生成
             ResourceStaticLoader loader = new ResourceStaticLoader(_registry);
@@ -28,14 +24,14 @@ namespace mano.Runtime
             LoadAndStore(loader, "Resource/Static/room.json", WorldObject.Static.Room);
             LoadAndStore(loader, "Resource/Static/rule.json", WorldObject.Static.Rule);
 
-            // StaticからDynamicへ実体化する
-            WorldObject.Init();
+            var worldTrait = _registry.GetTrait("WorldTrait");
+            worldTrait?.ExecuteInit(new mano.Engine.Object(), WorldObject);
         }
 
         public void Update()
         {
-            // Dynamicリソースを渡して更新
-            WorldObject.Update(_resource.Dynamic);
+            var worldTrait = _registry.GetTrait("WorldTrait");
+            worldTrait?.ExecuteUpdate(new mano.Engine.Object(), WorldObject);
         }
 
         public void Dispose()
@@ -44,7 +40,7 @@ namespace mano.Runtime
         }
 
         // Loaderで読み込んだリストを、指定した辞書に直接格納するヘルパー
-        private void LoadAndStore(ResourceStaticLoader loader, string path, Dictionary<string, Engine.Object> targetDict)
+        private void LoadAndStore(ResourceStaticLoader loader, string path, Dictionary<string, mano.Engine.Object> targetDict)
         {
             var objects = loader.LoadObjects(path);
             foreach (var obj in objects)

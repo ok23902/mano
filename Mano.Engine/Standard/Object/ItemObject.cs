@@ -1,11 +1,14 @@
-public class ItemObject : Object
+namespace mano.Engine
 {
-    public string Details = "";
-    public string Status = "";
+    public class ItemObject : Object
+    {
+        public string Details = "";
+        public string Status = "";
 
-    public string RoomId = "home";
+        public string RoomId = "home";
 
-    public Vector2 Position = (0, 0);
+        public Vector2 Position = new Vector2(0, 0);
 
-    public float Weight = 20;
+        public float Weight = 20;
+    }
 }

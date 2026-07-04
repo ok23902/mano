@@ -1,8 +1,9 @@
-public struct Tick
+namespace mano.Engine
 {
-    public long Frame;
-
-    public float DeltaTime;
-
-    public DateTime DateTime;
+    public struct Tick
+    {
+        public long Frame;
+        public float DeltaTime;
+        public DateTime DateTime;
+    }
 }

@@ -4,34 +4,47 @@ namespace mano.Engine
 {
     public class Object
     {
-        public string Id { get; set; } = string.Empty;
-        public string Name { get; set; } = string.Empty;
+        public string Id { get; set; } = "";
+        public string Name { get; set; } = "";
+        public List<string> Traits { get; set; } = new List<string>();
+        public Dictionary<string, object> Fields { get; set; } = new Dictionary<string, object>();
 
-        public List<string> Traits { get; set; } = new List<Trait>();
-
-        public virtual void Init(WorldObject worldObject)
+        public Object Clone()
         {
-            foreach (var trait in Traits)
+            return new Object
             {
-                trait.ExecuteInit(this, worldObject);
+                Id = this.Id,
+                Name = this.Name,
+                Traits = new List<string>(this.Traits),
+                Fields = new Dictionary<string, object>(this.Fields)
+            };
+        }
+
+        public void Init(WorldObject world)
+        {
+            if (world.TraitProvider == null) return;
+            foreach (var traitId in Traits)
+            {
+                world.TraitProvider.GetTrait(traitId)?.ExecuteInit(this, world);
             }
         }
 
-        public virtual void Update(WorldObject worldObject)
+        public void Update(WorldObject world)
         {
-            foreach (var trait in Traits)
+            if (world.TraitProvider == null) return;
+            foreach (var traitId in Traits)
             {
-                trait.ExecuteUpdate(this, worldObject);
+                world.TraitProvider.GetTrait(traitId)?.ExecuteUpdate(this, world);
             }
         }
 
-        public virtual void Dispose(WorldObject world)
+        public void Dispose(WorldObject world)
         {
-            foreach (var trait in Traits)
+            if (world.TraitProvider == null) return;
+            foreach (var traitId in Traits)
             {
-                trait.ExecuteDispose(this, world);
+                world.TraitProvider.GetTrait(traitId)?.ExecuteDispose(this, world);
             }
-            TraitIds.Clear();
         }
     }
 }

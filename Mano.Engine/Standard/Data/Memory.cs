@@ -1,5 +1,6 @@
-namespace Mano;
-
-public class Memory : Information
+namespace mano.Engine
 {
+    public class Memory : Information
+    {
+    }
 }

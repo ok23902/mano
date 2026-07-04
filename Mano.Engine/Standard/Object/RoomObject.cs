@@ -1,8 +1,11 @@
-public class RoomObject : Object
+namespace mano.Engine
 {
-    public List<CharacterObject> Characters = new();
+    public class RoomObject : Object
+    {
+        public List<CharacterObject> Characters = new();
 
-    public List<ItemObject> Items = new();
+        public List<ItemObject> Items = new();
 
-    public List<Rule> Rules = new();
+        public List<Rule> Rules = new();
+    }
 }

@@ -6,6 +6,7 @@ namespace mano.Engine
     {
         public DataContainer Static { get; } = new DataContainer();
         public DataContainer Dynamic { get; } = new DataContainer();
+        public ITraitProvider? TraitProvider { get; set; }
 
         // 4つの辞書を持つだけのシンプルなコンテナ
         public class DataContainer
