@@ -50,7 +50,7 @@ namespace mano.Runtime
                 foreach (JsonElement element in doc.RootElement.EnumerateArray())
                 {
                     // 1. Typeを取得してFactoryで生成
-                    string typeName = element.GetProperty("Type").GetString();
+                    string typeName = element.GetProperty("ObjectType").GetString();
                     mano.Engine.Object newObj = ObjectFactory.Create(typeName);
 
                     // 2. フィールド/プロパティへの自動代入

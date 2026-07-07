@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Diagnostics;
 using mano.Engine;
 
 namespace mano.Runtime
@@ -19,10 +20,15 @@ namespace mano.Runtime
             ResourceStaticLoader loader = new ResourceStaticLoader(_registry);
 
             // 各JSONから生成したObjectを、直接対応するStatic内の辞書に詰める
-            LoadAndStore(loader, "Resource/Static/character.json", WorldObject.Static.Character);
-            LoadAndStore(loader, "Resource/Static/item.json", WorldObject.Static.Item);
-            LoadAndStore(loader, "Resource/Static/room.json", WorldObject.Static.Room);
-            LoadAndStore(loader, "Resource/Static/rule.json", WorldObject.Static.Rule);
+            LoadAndStore(loader, "Resource/Static/Settings/character.json", WorldObject.Static.Character);
+            LoadAndStore(loader, "Resource/Static/Settings/item.json", WorldObject.Static.Item);
+            LoadAndStore(loader, "Resource/Static/Settings/room.json", WorldObject.Static.Room);
+            LoadAndStore(loader, "Resource/Static/Settings/rule.json", WorldObject.Static.Rule);
+
+            if (!System.IO.File.Exists("Resource/Static/Settings/character.json"))
+            {
+                System.Diagnostics.Debug.WriteLine($"★エラー: ファイルが見つかりません！ -> {System.IO.Path.GetFullPath("Resource/Static/Settings/character.json")}");
+            }
 
             var worldTrait = _registry.GetTrait("WorldTrait");
             worldTrait?.ExecuteInit(new mano.Engine.Object(), WorldObject);

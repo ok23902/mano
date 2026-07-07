@@ -1,10 +1,12 @@
 [
     {
         "Id": "home",
-        "Name": "ホーム"
+        "Name": "ホーム",
+        "ObjectType": "RoomObject"
     },
     {
         "Id": "Convini",
-        "Name": "コンビニ"
+        "Name": "コンビニ",
+        "ObjectType": "RoomObject"
     }
 ]

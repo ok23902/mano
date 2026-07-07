@@ -1,3 +1,6 @@
-{
-    "SleepnessProgressRate": 2
-}
+[
+    {
+    "SleepnessProgressRate": 2,
+    "ObjectType": "RuleObject"
+    }
+]
