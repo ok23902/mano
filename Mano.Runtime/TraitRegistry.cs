@@ -12,7 +12,7 @@ namespace mano.Runtime
             _traits[id] = trait;
         }
 
-        public Trait? GetTrait(string traitId)
+        public ITrait? GetTrait(string traitId)
         {
             if (_traits.TryGetValue(traitId, out var trait))
             {

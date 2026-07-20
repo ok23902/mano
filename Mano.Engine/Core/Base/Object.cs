@@ -1,50 +1,44 @@
-using System.Collections.Generic;
+using System;
 
 namespace mano.Engine
 {
     public class Object
     {
         public string Id { get; set; } = "";
-        public string Name { get; set; } = "";
         public List<string> Traits { get; set; } = new List<string>();
-        public Dictionary<string, object> Fields { get; set; } = new Dictionary<string, object>();
+        
+        public FieldContainer Fields { get; set; } = new FieldContainer();
 
-        public Object Clone()
+
+        public virtual Object Clone()
         {
-            return new Object
-            {
-                Id = this.Id,
-                Name = this.Name,
-                Traits = new List<string>(this.Traits),
-                Fields = new Dictionary<string, object>(this.Fields)
-            };
+            var clone = (Object)Activator.CreateInstance(this.GetType())!;
+            
+            clone.Id = this.Id;
+            clone.Fields = this.Fields.Clone();
+            
+            return clone;
         }
 
         public void Init(WorldObject world)
         {
             if (world.TraitProvider == null) return;
-            foreach (var traitId in Traits)
-            {
+            foreach (var traitId in Fields.Get<TraitsComponent>().TraitIds)
                 world.TraitProvider.GetTrait(traitId)?.ExecuteInit(this, world);
-            }
         }
 
         public void Update(WorldObject world)
         {
             if (world.TraitProvider == null) return;
-            foreach (var traitId in Traits)
-            {
+            foreach (var traitId in Fields.Get<TraitsComponent>().TraitIds)
                 world.TraitProvider.GetTrait(traitId)?.ExecuteUpdate(this, world);
-            }
         }
 
         public void Dispose(WorldObject world)
         {
             if (world.TraitProvider == null) return;
-            foreach (var traitId in Traits)
-            {
+            foreach (var traitId in Fields.Get<TraitsComponent>().TraitIds)
                 world.TraitProvider.GetTrait(traitId)?.ExecuteDispose(this, world);
-            }
         }
     }
 }

@@ -12,7 +12,7 @@ namespace mano.Runtime
         public class Dynamic
         {
             public float Tick { get; set; }
-            public string Input { get; set; }
+            //public string Input { get; set; }
         }
     }
 }

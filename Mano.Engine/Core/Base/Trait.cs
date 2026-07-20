@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace mano.Engine
 {
-    public abstract class Trait
+    public abstract class Trait : ITrait
     {
         public string Id => this.GetType().Name;
 

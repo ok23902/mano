@@ -7,19 +7,26 @@ using mano.Engine;
 
 namespace mano.Runtime
 {
-    // ファクトリをここに併設（拡張しやすくするため）
     public static class ObjectFactory
     {
         public static mano.Engine.Object Create(string typeName)
         {
-            return typeName switch
+            if (string.IsNullOrEmpty(typeName)) return new mano.Engine.Object();
+
+            Type? type = GetEngineType(typeName);
+            if (type != null && typeof(mano.Engine.Object).IsAssignableFrom(type))
             {
-                "Character" => new CharacterObject(),
-                "Item" => new ItemObject(),
-                "Room" => new RoomObject(),
-                "Rule" => new RuleObject(),
-                _ => new mano.Engine.Object()
-            };
+                var instance = Activator.CreateInstance(type) as mano.Engine.Object;
+                if (instance != null) return instance;
+            }
+            
+            return new mano.Engine.Object();
+        }
+
+        public static Type? GetEngineType(string typeName)
+        {
+            var assembly = typeof(mano.Engine.Object).Assembly;
+            return assembly.GetType($"mano.Engine.{typeName}");
         }
     }
 
@@ -27,7 +34,6 @@ namespace mano.Runtime
     {
         private readonly TraitRegistry _registry;
 
-        // Loaderには Runtime ではなく、Traitを引っ張るための Registry だけを渡す
         public ResourceStaticLoader(TraitRegistry registry)
         {
             _registry = registry;
@@ -36,68 +42,78 @@ namespace mano.Runtime
         public List<mano.Engine.Object> LoadObjects(string relativePath)
         {
             var resultList = new List<mano.Engine.Object>();
-            
-            // 実行ファイルの場所を基底パスとして絶対パスを算出
             string fullPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, relativePath);
             
-            if (!File.Exists(fullPath)) return resultList; // ファイルが無ければ空を返す
+            if (!File.Exists(fullPath)) return resultList;
 
             string jsonContent = File.ReadAllText(fullPath);
+            var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
 
-            // JSONが配列形式になっている前提: [ { "Id": "Player", "Type": "Character", ... } ]
             using (JsonDocument doc = JsonDocument.Parse(jsonContent))
             {
                 foreach (JsonElement element in doc.RootElement.EnumerateArray())
                 {
-                    // 1. Typeを取得してFactoryで生成
-                    string typeName = element.GetProperty("ObjectType").GetString();
+                    string typeName = element.GetProperty("ObjectType").GetString() ?? "";
                     mano.Engine.Object newObj = ObjectFactory.Create(typeName);
 
-                    // 2. フィールド/プロパティへの自動代入
-                    PopulateObject(newObj, element);
+                    if (element.TryGetProperty("Id", out JsonElement idElement))
+                    {
+                        newObj.Id = idElement.GetString() ?? "";
+                    }
 
-                    // 3. Traitのアタッチ (JSON内に "Traits": ["MoveTrait"] などの配列がある想定)
+                    PopulateFields(newObj, element, options);
+
                     if (element.TryGetProperty("Traits", out JsonElement traitsElement))
                     {
                         foreach (JsonElement traitNameElement in traitsElement.EnumerateArray())
                         {
-                            string traitId = traitNameElement.GetString();
-                            var trait = _registry.GetTrait(traitNameElement.GetString());
-                            if (trait != null) newObj.Traits.Add(traitId);
+                            string traitId = traitNameElement.GetString() ?? "";
+                            if (!string.IsNullOrEmpty(traitId))
+                            {
+                                var trait = _registry.GetTrait(traitId);
+                                if (trait != null) newObj.Traits.Add(traitId);
+                            }
                         }
                     }
 
-                    // 初期化を呼んでリストに追加
                     resultList.Add(newObj);
                 }
             }
             return resultList;
         }
 
-        public static void PopulateObject(mano.Engine.Object obj, JsonElement json)
+        public static void PopulateFields(mano.Engine.Object obj, JsonElement json, JsonSerializerOptions options)
         {
-            var type = obj.GetType();
-            
-            foreach (var property in json.EnumerateObject())
-            {
-                var propInfo = type.GetProperty(property.Name, BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
-                
-                if (propInfo != null && propInfo.CanWrite)
-                {
-                    object value = property.Value.ValueKind switch
-                    {
-                        JsonValueKind.String => property.Value.GetString(),
-                        JsonValueKind.Number => property.Value.GetDouble(),
-                        JsonValueKind.True => true,
-                        JsonValueKind.False => false,
-                        _ => null
-                    };
+            if (!json.TryGetProperty("Fields", out JsonElement fieldsElement)) return;
 
-                    // プロパティの型（intやfloatなど）に安全に変換して代入
-                    if (value != null)
+            foreach (var componentJson in fieldsElement.EnumerateObject())
+            {
+                string componentName = componentJson.Name; 
+                Type? compType = ObjectFactory.GetEngineType(componentName); 
+                
+                if (compType != null)
+                {
+                    object? componentInstance = JsonSerializer.Deserialize(componentJson.Value.GetRawText(), compType, options);
+                    
+                    if (componentInstance != null)
                     {
-                        propInfo.SetValue(obj, Convert.ChangeType(value, propInfo.PropertyType));
+                        InjectComponent(obj.Fields, compType, componentInstance);
                     }
+                }
+            }
+        }
+
+        private static void InjectComponent(object fieldContainer, Type componentType, object componentInstance)
+        {
+            Type containerType = fieldContainer.GetType();
+            
+            foreach (var method in containerType.GetMethods())
+            {
+                if ((method.Name == "Set" || method.Name == "Add" || method.Name == "Register") && method.IsGenericMethod)
+                {
+                    var genericMethod = method.MakeGenericMethod(componentType);
+                    genericMethod.Invoke(fieldContainer, new[] { componentInstance });
+                    return;
                 }
             }
         }

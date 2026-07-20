@@ -1,9 +1,13 @@
 {
-  "id": "sample_prison_island",
-  "name": "監獄島",
-  "character": { "file": "character.json" },
-  "item": { "file": "item.json" },
-  "room": { "file": "room.json" },
-  "rule": { "file": "rule.json" },
-  "ObjectType": "WorldObject"
+  "Id": "sample_prison_island",
+  "ObjectType": "WorldObject",
+  "Fields": {
+    "NameComponent": { "Value": "監獄島" },
+    "WorldDataComponent": {
+      "CharacterFile": "character.json",
+      "ItemFile": "item.json",
+      "RoomFile": "room.json",
+      "RuleFile": "rule.json"
+    }
+  }
 }

@@ -1,6 +1,9 @@
 [
-    {
-    "SleepnessProgressRate": 2,
-    "ObjectType": "RuleObject"
+  {
+    "Id": "SleepRule",
+    "ObjectType": "RuleObject",
+    "Fields": {
+      "RuleComponent": { "Value": { "SleepnessProgressRate": 2 } }
     }
+  }
 ]

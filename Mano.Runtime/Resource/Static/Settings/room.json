@@ -1,12 +1,16 @@
 [
-    {
-        "Id": "home",
-        "Name": "ホーム",
-        "ObjectType": "RoomObject"
-    },
-    {
-        "Id": "Convini",
-        "Name": "コンビニ",
-        "ObjectType": "RoomObject"
+  {
+    "Id": "home",
+    "ObjectType": "RoomObject",
+    "Fields": {
+      "NameComponent": { "Value": "ホーム" }
     }
+  },
+  {
+    "Id": "Convini",
+    "ObjectType": "RoomObject",
+    "Fields": {
+      "NameComponent": { "Value": "コンビニ" }
+    }
+  }
 ]

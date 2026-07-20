@@ -1,14 +1,18 @@
 [
-    {
-        "Id": "Door1",
-        "Name": "ドア1",
-        "Details": "ほかの部屋に行ける",
-        "ObjectType": "ItemObject"
-    },
-    {
-        "Id": "Door2",
-        "Name": "ドア2",
-        "Details": "ほかの部屋に行ける",
-        "ObjectType": "ItemObject"
+  {
+    "Id": "Door1",
+    "ObjectType": "ItemObject",
+    "Fields": {
+      "NameComponent": { "Value": "ドア1" },
+      "DetailsComponent": { "Value": "ほかの部屋に行ける" }
     }
+  },
+  {
+    "Id": "Door2",
+    "ObjectType": "ItemObject",
+    "Fields": {
+      "NameComponent": { "Value": "ドア2" },
+      "DetailsComponent": { "Value": "ほかの部屋に行ける" }
+    }
+  }
 ]
