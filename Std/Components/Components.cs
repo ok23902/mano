@@ -1,4 +1,4 @@
-namespace mano.Engine
+namespace mano
 {
     public class TraitsComponent
     {

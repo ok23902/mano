@@ -6,6 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../mano.Engine/mano.Engine.csproj" />
+    <ProjectReference Include="../mano.Engine.csproj" />
   </ItemGroup>
 </Project>
