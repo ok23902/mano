@@ -1,9 +1,0 @@
-[
-  {
-    "Id": "SleepRule",
-    "ObjectType": "RuleObject",
-    "Fields": {
-      "RuleComponent": { "Value": { "SleepnessProgressRate": 2 } }
-    }
-  }
-]
