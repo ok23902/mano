@@ -4,7 +4,7 @@ namespace mano
     {
         public void OnInit(WorldObject world)
         {
-            Console.WriteLine($"[World] 世界を生成しました。時刻は {world.TimeOfDay} 時です。");
+            Console.WriteLine("WorldObject Initialized");
         }
 
         public void OnUpdate(WorldObject world)
@@ -15,7 +15,7 @@ namespace mano
             {
                 world.TimeOfDay = 0;
                 world.DayCount++;
-                Console.WriteLine($"[World] 日付が変わりました。{world.DayCount}日目。");
+                //Console.WriteLine($"[World] 日付が変わりました。{world.DayCount}日目。");
             }
         }
     }

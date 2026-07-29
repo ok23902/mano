@@ -1,0 +1,161 @@
+[
+  {
+    "ObjectType": "FoodObject",
+    "Traits": ["FoodTrait"],
+    "Name": "みかん",
+    "Status": "normal",
+    "Weight": 0.1
+  },
+  {
+    "ObjectType": "FoodObject",
+    "Traits": ["FoodTrait"],
+    "Name": "湯呑",
+    "Status": "normal",
+    "Weight": 0.2
+  },
+  {
+    "ObjectType": "ContainerObject",
+    "Traits": ["ContainerTrait"],
+    "Name": "冷蔵庫",
+    "Status": "normal",
+    "Weight": 80
+  },
+  {
+    "ObjectType": "UtteranceObject",
+    "Traits": ["UtteranceTrait"],
+    "Name": "テレビ",
+    "Status": "normal",
+    "Weight": 10
+  },
+  {
+    "ObjectType": "ToiletObject",
+    "Traits": ["ToiletTrait"],
+    "Name": "トイレ",
+    "Status": "normal",
+    "Weight": 40
+  },
+  {
+    "ObjectType": "ShowerObject",
+    "Traits": ["ShowerTrait"],
+    "Name": "シャワー",
+    "Status": "normal",
+    "Weight": 1
+  },
+  {
+    "ObjectType": "SleepObject",
+    "Traits": ["SleepTrait"],
+    "Name": "ベッド",
+    "Status": "normal",
+    "Weight": 60
+  },
+  {
+    "ObjectType": "ItemObject",
+    "Name": "おみくじ",
+    "Status": "normal",
+    "Weight": 0
+  },
+  {
+    "ObjectType": "ItemObject",
+    "Name": "鈴",
+    "Status": "normal",
+    "Weight": 0
+  },
+  {
+    "ObjectType": "ItemObject",
+    "Name": "お年玉",
+    "Status": "normal",
+    "Weight": 0
+  },
+
+  {
+    "ObjectType": "DoorObject",
+    "Traits": ["DoorTrait"],
+    "Name": "和室から廊下へのドア",
+    "Status": "normal",
+    "Weight": 20
+  },
+  {
+    "ObjectType": "DoorObject",
+    "Traits": ["DoorTrait"],
+    "Name": "廊下から和室へのドア",
+    "Status": "normal",
+    "Weight": 20
+  },
+  {
+    "ObjectType": "DoorObject",
+    "Traits": ["DoorTrait"],
+    "Name": "廊下からトイレへのドア",
+    "Status": "normal",
+    "Weight": 20
+  },
+  {
+    "ObjectType": "DoorObject",
+    "Traits": ["DoorTrait"],
+    "Name": "トイレから廊下へのドア",
+    "Status": "normal",
+    "Weight": 20
+  },
+  {
+    "ObjectType": "DoorObject",
+    "Traits": ["DoorTrait"],
+    "Name": "廊下から寝室へのドア",
+    "Status": "normal",
+    "Weight": 20
+  },
+  {
+    "ObjectType": "DoorObject",
+    "Traits": ["DoorTrait"],
+    "Name": "寝室から廊下へのドア",
+    "Status": "normal",
+    "Weight": 20
+  },
+  {
+    "ObjectType": "DoorObject",
+    "Traits": ["DoorTrait"],
+    "Name": "廊下から外へのドア",
+    "Status": "normal",
+    "Weight": 20
+  },
+  {
+    "ObjectType": "DoorObject",
+    "Traits": ["DoorTrait"],
+    "Name": "外から廊下へのドア",
+    "Status": "normal",
+    "Weight": 20
+  },
+  {
+    "ObjectType": "DoorObject",
+    "Traits": ["DoorTrait"],
+    "Name": "外から神社へのドア",
+    "Status": "normal",
+    "Weight": 20
+  },
+  {
+    "ObjectType": "DoorObject",
+    "Traits": ["DoorTrait"],
+    "Name": "神社から外へのドア",
+    "Status": "normal",
+    "Weight": 20
+  },
+  {
+    "ObjectType": "DoorObject",
+    "Traits": ["DoorTrait"],
+    "Name": "外からコンビニへのドア",
+    "Status": "normal",
+    "Weight": 20
+  },
+  {
+    "ObjectType": "DoorObject",
+    "Traits": ["DoorTrait"],
+    "Name": "コンビニから外へのドア",
+    "Status": "normal",
+    "Weight": 20
+  },
+
+  {
+    "ObjectType": "ItemObject",
+    "Name": "スマホ",
+    "Status": "normal",
+    "Weight": 0.2
+  }
+]

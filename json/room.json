@@ -1,0 +1,34 @@
+[
+  {
+    "ObjectType": "RoomObject",
+    "Name": "和室"
+  },
+  {
+    "ObjectType": "RoomObject",
+    "Name": "廊下"
+  },
+  {
+    "ObjectType": "RoomObject",
+    "Name": "トイレ"
+  },
+  {
+    "ObjectType": "RoomObject",
+    "Name": "寝室"
+  },
+  {
+    "ObjectType": "RoomObject",
+    "Name": "外"
+  },
+  {
+    "ObjectType": "RoomObject",
+    "Name": "神社"
+  },
+  {
+    "ObjectType": "RoomObject",
+    "Name": "コンビニ"
+  },
+  {
+    "ObjectType": "RoomObject",
+    "Name": "遠方"
+  }
+]

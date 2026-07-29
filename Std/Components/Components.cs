@@ -51,13 +51,13 @@ namespace mano
     public class GoalComponent { public string Value { get; set; } = ""; }
     public class FocusedInformationComponent { public List<InformationComponent> Values { get; set; } = new(); }
     public class BioStateComponent 
-{ 
-    public int Sleepiness { get; set; }
-    public int Hungry { get; set; }
-    public int Thirsty { get; set; }
-    public int Boredom { get; set; }
-    public int Bio { get; set; }
-}
+    { 
+        public int Sleepiness { get; set; }
+        public int Hungry { get; set; }
+        public int Thirsty { get; set; }
+        public int Boredom { get; set; }
+        public int Bio { get; set; }
+    }
     
     public class RoomCharactersComponent { public List<string> CharacterIds { get; set; } = new(); }
     public class RoomItemsComponent { public List<string> ItemIds { get; set; } = new(); }

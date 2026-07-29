@@ -1,163 +1,99 @@
-using System.Collections;
-using System.Reflection;
 using System.Text.Json;
 
 namespace mano
 {
-    public class Runtime
+    public class Runtime : ManoObject
     {
-        public T Load<T>(string json) where T : ManoObject
+        public static Runtime Instance { get; } = new Runtime();
+
+        public List<ManoObject> InstanceObjects { get; } = new();
+
+        public static List<ManoObject> Objects => Instance.InstanceObjects;
+
+        public static new void Down(string eventId) => ((ManoObject)Instance).Down(eventId);
+        public static new void Down(string[] events) => ((ManoObject)Instance).Down(events);
+
+        public static new void Up(string eventId) => ((ManoObject)Instance).Up(eventId);
+        public static new void Up(string[] events) => ((ManoObject)Instance).Up(events);
+
+        private readonly Stack<ManoObject> _callStack = new();
+
+        internal void PushCall(ManoObject obj) => _callStack.Push(obj);
+
+        internal void PopCall() => _callStack.Pop();
+
+        internal ManoObject? GetCallerOf(ManoObject obj)
         {
-            var obj = JsonSerializer.Deserialize<T>(json);
-            if (obj == null)
-            {
-                throw new InvalidOperationException($"failed to load {typeof(T).Name} from json.");
-            }
-            return obj;
+            if (_callStack.Count == 0 || !ReferenceEquals(_callStack.Peek(), obj))
+                return null;
+
+            var frames = _callStack.ToArray();
+            return frames.Length > 1 ? frames[1] : null;
         }
 
-       public void Set(object target, string memberName, object? value)
+        private readonly HashSet<(ManoObject, string)> _processingGuard = new();
+
+        internal bool TryEnterEvent(ManoObject obj, string eventId) => _processingGuard.Add((obj, eventId));
+
+        internal void ExitEvent(ManoObject obj, string eventId) => _processingGuard.Remove((obj, eventId));
+
+        public static List<ManoObject> Load(string json)
         {
-            var type = target.GetType();
-            var flags = BindingFlags.Public | BindingFlags.Instance;
-
-            var prop = type.GetProperty(memberName, flags);
-            if (prop != null && prop.CanWrite)
+            var options = new JsonSerializerOptions
             {
-                prop.SetValue(target, value);
-                AutoUpdateParent(target, value);
-                return;
-            }
-
-            var field = type.GetField(memberName, flags);
-            if (field != null)
-            {
-                field.SetValue(target, value);
-                AutoUpdateParent(target, value);
-                return;
-            }
-
-            throw new ArgumentException($"Not found '{memberName}' in '{type.Name}'.");
-        }
-
-        private void AutoUpdateParent(object parentCandidate, object? value)
-        {
-            if (value == null || parentCandidate is not ManoObject parentObj) return;
-
-            if (value is ManoObject childObj)
-            {
-                childObj.Parent = parentObj;
-            }
-            else if (value is IEnumerable collection)
-            {
-                foreach (var item in collection)
-                {
-                    if (item is ManoObject elementChild)
-                    {
-                        elementChild.Parent = parentObj;
-                    }
-                }
-            }
-        }
-
-        public void Move(ManoObject child, ManoObject newParent, string newMemberName)
-        {
-            if (child.Parent != null)
-            {
-                DetachDynamically(child.Parent, child);
-            }
-
-            var type = newParent.GetType();
-            var flags = BindingFlags.Public | BindingFlags.Instance;
-
-            var prop = type.GetProperty(newMemberName, flags);
-            if (prop != null)
-            {
-                AssignToMember(newParent, prop, child);
-            }
-            else
-            {
-                var field = type.GetField(newMemberName, flags);
-                if (field != null)
-                {
-                    AssignToMember(newParent, field, child);
-                }
-                else
-                {
-                    throw new ArgumentException($"Not found '{newMemberName}' in '{type.Name}'.");
-                }
-            }
-
-            child.Parent = newParent;
-        }
-
-        private void AssignToMember(ManoObject parent, MemberInfo member, ManoObject child)
-        {
-            var value = member switch
-            {
-                PropertyInfo p => p.GetValue(parent),
-                FieldInfo f => f.GetValue(parent),
-                _ => null
+                PropertyNameCaseInsensitive = true
             };
 
-            if (value is IList list)
+            using var doc = JsonDocument.Parse(json);
+            var result = new List<ManoObject>();
+
+            foreach (var element in doc.RootElement.EnumerateArray())
             {
-                list.Add(child);
+                if (!element.TryGetProperty("ObjectType", out var typeProp))
+                {
+                    throw new InvalidOperationException("The JSON element is missing the 'ObjectType' property.");
+                }
+
+                string typeName = typeProp.GetString()!;
+                Type? targetType = FindTypeByName(typeName);
+                if (targetType == null)
+                {
+                    throw new InvalidOperationException($"The type '{typeName}' was not found.");
+                }
+
+                var manoObj = JsonSerializer.Deserialize(element.GetRawText(), targetType, options) as ManoObject;
+                if (manoObj == null) continue;
+
+                if (element.TryGetProperty("Traits", out var traitsProp) && traitsProp.ValueKind == JsonValueKind.Array)
+                {
+                    foreach (var traitElement in traitsProp.EnumerateArray())
+                    {
+                        string? traitName = traitElement.GetString();
+                        if (!string.IsNullOrEmpty(traitName))
+                        {
+                            var trait = TraitRegistry.Get(traitName);
+                            if (trait != null)
+                            {
+                                manoObj.AttachTrait(trait);
+                            }
+                        }
+                    }
+                }
+
+                result.Add(manoObj);
             }
-            else
-            {
-                if (member is PropertyInfo p && p.CanWrite) p.SetValue(parent, child);
-                if (member is FieldInfo f) f.SetValue(parent, child);
-            }
+
+            return result;
         }
 
-        private void DetachDynamically(ManoObject oldParent, ManoObject child)
+        private static Type? FindTypeByName(string typeName)
         {
-            var type = oldParent.GetType();
-            var flags = BindingFlags.Public | BindingFlags.Instance;
-
-            foreach (var prop in type.GetProperties(flags))
+            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
-                if (!prop.CanRead) continue;
-                
-                var val = prop.GetValue(oldParent);
-                if (val is IList list && list.Contains(child))
-                {
-                    list.Remove(child);
-                    return;
-                }
-                else if (val == child && prop.CanWrite)
-                {
-                    prop.SetValue(oldParent, null);
-                    return;
-                }
+                var type = assembly.GetType($"mano.{typeName}") ?? assembly.GetType(typeName);
+                if (type != null) return type;
             }
-
-            foreach (var field in type.GetFields(flags))
-            {
-                var val = field.GetValue(oldParent);
-                if (val is IList list && list.Contains(child))
-                {
-                    list.Remove(child);
-                    return;
-                }
-                else if (val == child)
-                {
-                    field.SetValue(oldParent, null);
-                    return;
-                }
-            }
-        }
-
-        public void Broadcast(ManoObject node, string eventId)
-        {
-            if (node == null) throw new ArgumentNullException(nameof(node));
-            var root = node;
-            while (root.Parent != null)
-            {
-                root = root.Parent;
-            }
-            root.Down(eventId);
+            return null;
         }
     }
 }

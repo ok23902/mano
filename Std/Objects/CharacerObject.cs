@@ -2,13 +2,15 @@ namespace mano
 {
     public class CharacterObject : ManoObject
     {
-        public override List<ManoTrait> Traits { get; set; } = new()
+        public CharacterObject()
         {
-            //TraitRegistry.Get<CharacterTrait>()
-        };
+            AttachTrait(TraitRegistry.Get<CharacterTrait>());
+        }
+
+        public string Id { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
         public string Personality { get; set; } = string.Empty;
         public string Status { get; set; } = string.Empty;
-        public string RoomId { get; set; } = string.Empty;
         public Vector2 Position { get; set; } = Vector2.Zero;
         public float Weight { get; set; } = 0f;
 
@@ -19,11 +21,11 @@ namespace mano
 
     public class CharacterAIObject : CharacterObject
     {
-        public override List<ManoTrait> Traits { get; set; } = new()
+        public CharacterAIObject()
         {
-            //TraitRegistry.Get<CharacterTrait>(),
-            //TraitRegistry.Get<CharacterAITrait>()
-        };
+            AttachTrait(TraitRegistry.Get<BioTrait>());
+        }
+
         public string Goal { get; set; } = string.Empty;
         public List<InformationComponent> FocusedInformation { get; set; } = new();
 
@@ -34,14 +36,7 @@ namespace mano
         public int Bio { get; set; } = 0;
     }
 
-    public class RoomObject : ManoObject
+    public class PlayerObject : CharacterObject
     {
-        public override List<ManoTrait> Traits { get; set; } = new()
-        {
-            //TraitRegistry.Get<RoomTrait>()
-        };
-        public List<string> Characters { get; set; } = new();
-        public List<string> Items { get; set; } = new();
-        public List<string> Rules { get; set; } = new();
     }
 }
