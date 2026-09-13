@@ -54,4 +54,10 @@ public static class TraitRegistry
             if (kv.Key.Name == name) return kv.Value;
         return null;
     }
+
+    public static void Register<T>(T instance) where T : ManoTrait
+    {
+        if (!_loaded) Load();
+        _registry[typeof(T)] = instance;
+    }
 }
