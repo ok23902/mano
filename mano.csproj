@@ -11,6 +11,7 @@
     <Description>A tree-structured, event-driven framework for building AI-agent simulations. Data lives in fields, behavior lives in traits, and communication flows only along parent-child edges.</Description>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/ok23902/mano</PackageProjectUrl>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
