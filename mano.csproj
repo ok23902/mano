@@ -2,6 +2,15 @@
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
+    <PackageId>ManoEngine</PackageId>
+    <AssemblyName>ManoEngine</AssemblyName>
+    <RootNamespace>mano</RootNamespace>
+    <Version>1.0.0</Version>
+    <Authors>ok23902</Authors>
+    <Company></Company>
+    <Description>A tree-structured, event-driven framework for building AI-agent simulations. Data lives in fields, behavior lives in traits, and communication flows only along parent-child edges.</Description>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
